@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/middleware/upload.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1762367970819,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1762367970819,
+            "name": "Commit-0",
+            "content": "const multer = require(\"multer\");\n\n// Store file in memory so Cloudinary can read from buffer\nconst storage = multer.memoryStorage();\n\n// Optional: basic filter to allow only images\nconst fileFilter = (req, file, cb) => {\n  if (!file.mimetype.startsWith(\"image/\")) {\n    return cb(new Error(\"Only image files are allowed\"), false);\n  }\n  cb(null, true);\n};\n\nconst upload = multer({\n  storage,\n  fileFilter,\n  limits: {\n    fileSize: 5 * 1024 * 1024, // 5 MB limit\n  },\n});\n\nmodule.exports = upload;\n"
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/routes/blogRoutes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1762361669930,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762367075840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,5 @@\n+// routes/blogRoutes.js\n const express = require(\"express\");\n const router = express.Router();\n \n const {\n@@ -6,30 +7,20 @@\n   getBlogs,\n   getBlogBySlug,\n   updateBlog,\n   deleteBlog,\n-  getSectionOptions, // NEW: return allowed homepage section tags\n+  getSectionOptions, // ✅ added\n } = require(\"../controllers/blogController\");\n \n const auth = require(\"../middleware/authMiddleware\");\n const upload = require(\"../middleware/upload\");\n \n-/**\n- * PUBLIC\n- * Supports query params:\n- *   - ?section=<top_new|most_popular|editors_pick|latest_posts|highlights>\n- *   - ?category=<category-slug>\n- *   - ?limit=<number>   (max 50)\n- */\n+// PUBLIC\n router.get(\"/\", getBlogs);\n-router.get(\"/sections\", getSectionOptions); // NEW helper for admin UI dropdowns\n+router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n router.get(\"/:slug\", getBlogBySlug);\n \n-/**\n- * ADMIN (multipart form-data)\n- * mainImage field is handled by Multer.\n- * For arrays like `sections`, send as JSON string in form-data and parse in controller.\n- */\n+// ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n router.delete(\"/:id\", auth, deleteBlog);\n \n"
+                }
+            ],
+            "date": 1762361669930,
+            "name": "Commit-0",
+            "content": "const express = require(\"express\");\nconst router = express.Router();\n\nconst {\n  createBlog,\n  getBlogs,\n  getBlogBySlug,\n  updateBlog,\n  deleteBlog,\n  getSectionOptions, // NEW: return allowed homepage section tags\n} = require(\"../controllers/blogController\");\n\nconst auth = require(\"../middleware/authMiddleware\");\nconst upload = require(\"../middleware/upload\");\n\n/**\n * PUBLIC\n * Supports query params:\n *   - ?section=<top_new|most_popular|editors_pick|latest_posts|highlights>\n *   - ?category=<category-slug>\n *   - ?limit=<number>   (max 50)\n */\nrouter.get(\"/\", getBlogs);\nrouter.get(\"/sections\", getSectionOptions); // NEW helper for admin UI dropdowns\nrouter.get(\"/:slug\", getBlogBySlug);\n\n/**\n * ADMIN (multipart form-data)\n * mainImage field is handled by Multer.\n * For arrays like `sections`, send as JSON string in form-data and parse in controller.\n */\nrouter.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\nrouter.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\nrouter.delete(\"/:id\", auth, deleteBlog);\n\nmodule.exports = router;\n"
+        }
+    ]
+}

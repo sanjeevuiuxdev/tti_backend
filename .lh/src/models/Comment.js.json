@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/models/Comment.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1762458416587,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1762458416587,
+            "name": "Commit-0",
+            "content": "// blog-backend/src/models/Comment.js\nconst mongoose = require(\"mongoose\");\n\nconst CommentSchema = new mongoose.Schema(\n  {\n    post: { type: mongoose.Schema.Types.ObjectId, ref: \"Blog\", required: true },\n    name: { type: String, required: true, trim: true, maxlength: 120 },\n    email: { type: String, required: true, trim: true, lowercase: true },\n    message: { type: String, required: true, trim: true, maxlength: 5000 },\n    approved: { type: Boolean, default: false },\n  },\n  { timestamps: true }\n);\n\n// helpful indexes\nCommentSchema.index({ post: 1, approved: 1, createdAt: 1 });\n\nmodule.exports = mongoose.model(\"Comment\", CommentSchema);\n"
+        }
+    ]
+}

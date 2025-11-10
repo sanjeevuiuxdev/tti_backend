@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/models/Admin.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1762275564759,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1762275564759,
+            "name": "Commit-0",
+            "content": "const mongoose = require('mongoose');\nconst bcrypt = require('bcrypt');\n\nconst AdminSchema = new mongoose.Schema(\n  {\n    username: { type: String, required: true, unique: true },\n    email:    { type: String, unique: true, sparse: true }, // <- add this\n    passwordHash: { type: String, required: true },\n  },\n  { timestamps: true }\n);\n\n// helper method to set password\nAdminSchema.methods.setPassword = async function (plainPassword) {\n  const salt = await bcrypt.genSalt(10);\n  this.passwordHash = await bcrypt.hash(plainPassword, salt);\n};\n\n// helper to validate password\nAdminSchema.methods.validatePassword = async function (plainPassword) {\n  return bcrypt.compare(plainPassword, this.passwordHash);\n};\n\nmodule.exports = mongoose.model('Admin', AdminSchema);\n"
+        }
+    ]
+}

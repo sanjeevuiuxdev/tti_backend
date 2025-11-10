@@ -1,0 +1,22 @@
+{
+    "sourceFile": "server.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1762458490759,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762458510686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n const express = require('express');\n const dotenv = require('dotenv');\n const cors = require('cors');\n const connectDB = require('./src/config/db');\n+const { publicRouter: commentPublic, adminRouter: commentAdmin } = require(\"./src/routes/commentRoutes\");\n \n \n \n dotenv.config();\n@@ -28,8 +29,10 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n+\n+\n // health check\n app.get('/', (req, res) => {\n   res.json({ status: 'API running' });\n });\n"
+                }
+            ],
+            "date": 1762458490759,
+            "name": "Commit-0",
+            "content": "// server.js\nconst express = require('express');\nconst dotenv = require('dotenv');\nconst cors = require('cors');\nconst connectDB = require('./src/config/db');\n\n\n\ndotenv.config();\n\nconst authRoutes = require('./src/routes/authRoutes');\nconst categoryRoutes = require('./src/routes/categoryRoutes');\nconst blogRoutes = require('./src/routes/blogRoutes');\nconst uploadRoutes = require('./src/routes/uploadRoutes');\n\nconst app = express();\n\n// middlewares\napp.use(cors()); // allow frontend to hit backend\napp.use(express.json({ limit: '10mb' })); // for json / rich text body\napp.use(express.urlencoded({ extended: true }));\n\n// connect DB\nconnectDB();\n\n// routes\napp.use('/api/auth', authRoutes);\napp.use('/api/categories', categoryRoutes);\napp.use('/api/blogs', blogRoutes);\napp.use('/api/uploads', uploadRoutes);\n\n// health check\napp.get('/', (req, res) => {\n  res.json({ status: 'API running' });\n});\n\nconst PORT = process.env.PORT || 5000;\napp.listen(PORT, () => {\n  console.log(`Server running on port ${PORT}`);\n});\n"
+        }
+    ]
+}

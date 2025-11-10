@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/controllers/authController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1762275582562,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762275630686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,9 @@\n-// src/controllers/authController.js\n const Admin = require('../models/Admin');\n const jwt = require('jsonwebtoken');\n \n-// accept either username or email in the same field\n-// frontend still sends { username: '...' , password: '...' }\n+// POST /api/auth/login\n+// body: { username, password }\n const login = async (req, res) => {\n   try {\n     const { username, password } = req.body; // \"username\" may be email too\n     if (!username || !password) {\n@@ -31,5 +30,20 @@\n     res.status(500).json({ message: 'Server error' });\n   }\n };\n \n-module.exports = { login, getMe };\n+// GET /api/auth/me\n+// header: Authorization: Bearer <token>\n+const getMe = async (req, res) => {\n+  try {\n+    const admin = await Admin.findById(req.adminId).select('-passwordHash');\n+    if (!admin) return res.status(404).json({ message: 'Not found' });\n+    res.json(admin);\n+  } catch (err) {\n+    res.status(500).json({ message: 'Server error' });\n+  }\n+};\n+\n+module.exports = {\n+  login,\n+  getMe,\n+};\n"
+                }
+            ],
+            "date": 1762275582562,
+            "name": "Commit-0",
+            "content": "// src/controllers/authController.js\nconst Admin = require('../models/Admin');\nconst jwt = require('jsonwebtoken');\n\n// accept either username or email in the same field\n// frontend still sends { username: '...' , password: '...' }\nconst login = async (req, res) => {\n  try {\n    const { username, password } = req.body; // \"username\" may be email too\n    if (!username || !password) {\n      return res.status(400).json({ message: 'Missing credentials' });\n    }\n\n    const admin = await Admin.findOne({\n      $or: [{ username }, { email: username }]\n    });\n\n    if (!admin) return res.status(400).json({ message: 'Invalid credentials' });\n\n    const ok = await admin.validatePassword(password);\n    if (!ok) return res.status(400).json({ message: 'Invalid credentials' });\n\n    const token = jwt.sign({ id: admin._id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '7d' });\n\n    res.json({\n      token,\n      admin: { id: admin._id, username: admin.username, email: admin.email || null }\n    });\n  } catch (e) {\n    console.error('login error', e);\n    res.status(500).json({ message: 'Server error' });\n  }\n};\n\nmodule.exports = { login, getMe };\n"
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "sourceFile": "createAdmin.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1762274875375,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762274883333,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -9,9 +9,9 @@\n   await connectDB();\n \n   const admin = new Admin({\n     username: 'admin@gmail.com',\n-    passwordHash: 'temp', // will be replaced\n+    passwordHash: 'admin', // will be replaced\n   });\n \n   await admin.setPassword('yourStrongPassword123');\n   await admin.save();\n"
+                },
+                {
+                    "date": 1762275737300,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,38 @@\n-const dotenv = require('dotenv');\n-dotenv.config();\n+// createAdmin.js\n+require(\"dotenv\").config();\n+const connectDB = require(\"./src/config/db\");\n+const Admin = require(\"./src/models/Admin\");\n \n-const mongoose = require('mongoose');\n-const connectDB = require('./src/config/db');\n-const Admin = require('./src/models/Admin');\n-\n (async () => {\n-  await connectDB();\n+  try {\n+    await connectDB();\n \n-  const admin = new Admin({\n-    username: 'admin@gmail.com',\n-    passwordHash: 'admin', // will be replaced\n-  });\n+    const username = \"admin\";\n+    const email = \"admin@gmail.com\";\n+    const password = \"yourStrongPassword123\";\n \n-  await admin.setPassword('yourStrongPassword123');\n-  await admin.save();\n+    // find existing admin by username or email\n+    let admin = await Admin.findOne({\n+      $or: [{ username }, { email }],\n+    });\n \n-  console.log('Admin created:', admin.username);\n-  process.exit(0);\n+    if (!admin) {\n+      admin = new Admin({\n+        username,\n+        email,\n+        passwordHash: \"temp\", // placeholder until setPassword runs\n+      });\n+    }\n+\n+    await admin.setPassword(password); // hashes the password\n+    await admin.save();\n+\n+    console.log(\"✅ Admin ready:\");\n+    console.log({ username, email, password });\n+\n+    process.exit(0);\n+  } catch (err) {\n+    console.error(\"❌ Error creating admin:\", err);\n+    process.exit(1);\n+  }\n })();\n"
+                }
+            ],
+            "date": 1762274875375,
+            "name": "Commit-0",
+            "content": "const dotenv = require('dotenv');\ndotenv.config();\n\nconst mongoose = require('mongoose');\nconst connectDB = require('./src/config/db');\nconst Admin = require('./src/models/Admin');\n\n(async () => {\n  await connectDB();\n\n  const admin = new Admin({\n    username: 'admin@gmail.com',\n    passwordHash: 'temp', // will be replaced\n  });\n\n  await admin.setPassword('yourStrongPassword123');\n  await admin.save();\n\n  console.log('Admin created:', admin.username);\n  process.exit(0);\n})();\n"
+        }
+    ]
+}
