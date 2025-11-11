@@ -3,7 +3,6 @@ const express = require("express");
 const auth = require("../middleware/authMiddleware");
 const ctrl = require("../controllers/commentController");       
 
-
 // Public routes
 const publicRouter = express.Router();
 publicRouter.get("/", ctrl.listPublic);

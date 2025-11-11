@@ -1,8 +1,7 @@
 // blog-backend/src/routes/commentRoutes.js
 const express = require("express");
 const auth = require("../middleware/authMiddleware");
-const ctrl = require("../controllers/commentController");       
-
+const ctrl = require("../controllers/commentController");
 
 // Public routes
 const publicRouter = express.Router();
@@ -16,3 +15,7 @@ adminRouter.put("/:id/approve", auth, ctrl.approve);
 adminRouter.delete("/:id", auth, ctrl.remove);
 
 module.exports = { publicRouter, adminRouter };
+
+
+
+ew

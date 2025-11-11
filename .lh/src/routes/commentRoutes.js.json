@@ -3,11 +3,99 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 22,
             "patches": [
                 {
                     "date": 1762458454925,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762845420916,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,10 @@\n // blog-backend/src/routes/commentRoutes.js\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n const c = require(\"../controllers/commentController\");\n+const router = require(\"express\").Router();\n+const ctrl = require(\"../controllers/commentController\");\n \n // Public\n const publicRouter = express.Router();\n publicRouter.post(\"/\", c.createPublic);\n"
+                },
+                {
+                    "date": 1762845444736,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,11 +1,10 @@\n // blog-backend/src/routes/commentRoutes.js\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n const c = require(\"../controllers/commentController\");\n-const router = require(\"express\").Router();\n-const ctrl = require(\"../controllers/commentController\");\n \n+\n // Public\n const publicRouter = express.Router();\n publicRouter.post(\"/\", c.createPublic);\n publicRouter.get(\"/\", c.listPublic);\n"
+                },
+                {
+                    "date": 1762845469225,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,9 +2,12 @@\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n const c = require(\"../controllers/commentController\");\n \n+const router = require(\"express\").Router();\n+const ctrl = require(\"../controllers/commentController\");\n \n+\n // Public\n const publicRouter = express.Router();\n publicRouter.post(\"/\", c.createPublic);\n publicRouter.get(\"/\", c.listPublic);\n"
+                },
+                {
+                    "date": 1762845476085,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,15 @@\n // blog-backend/src/routes/commentRoutes.js\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n-const c = require(\"../controllers/commentController\");\n+// const c = require(\"../controllers/commentController\");\n \n const router = require(\"express\").Router();\n const ctrl = require(\"../controllers/commentController\");\n \n \n // Public\n-const publicRouter = express.Router();\n+// const publicRouter = express.Router();\n publicRouter.post(\"/\", c.createPublic);\n publicRouter.get(\"/\", c.listPublic);\n \n // Admin\n"
+                },
+                {
+                    "date": 1762845483558,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,8 +10,10 @@\n // Public\n // const publicRouter = express.Router();\n publicRouter.post(\"/\", c.createPublic);\n publicRouter.get(\"/\", c.listPublic);\n+router.get(\"/\", ctrl.listPublic);\n+router.post(\"/\", ctrl.createPublic);\n \n // Admin\n const adminRouter = express.Router();\n adminRouter.get(\"/\", auth, c.listAdmin);\n"
+                },
+                {
+                    "date": 1762846145198,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -8,16 +8,16 @@\n \n \n // Public\n // const publicRouter = express.Router();\n-publicRouter.post(\"/\", c.createPublic);\n-publicRouter.get(\"/\", c.listPublic);\n+// publicRouter.post(\"/\", c.createPublic);\n+// publicRouter.get(\"/\", c.listPublic);\n router.get(\"/\", ctrl.listPublic);\n router.post(\"/\", ctrl.createPublic);\n \n // Admin\n const adminRouter = express.Router();\n-adminRouter.get(\"/\", auth, c.listAdmin);\n+adminRouter.get(\"/\", auth, .listAdmin);\n adminRouter.put(\"/:id/approve\", auth, c.approve);\n adminRouter.delete(\"/:id\", auth, c.remove);\n \n module.exports = { publicRouter, adminRouter };\n"
+                },
+                {
+                    "date": 1762846150215,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,9 +15,9 @@\n router.post(\"/\", ctrl.createPublic);\n \n // Admin\n const adminRouter = express.Router();\n-adminRouter.get(\"/\", auth, .listAdmin);\n+adminRouter.get(\"/\", auth, ctrl.listAdmin);\n adminRouter.put(\"/:id/approve\", auth, c.approve);\n adminRouter.delete(\"/:id\", auth, c.remove);\n \n module.exports = { publicRouter, adminRouter };\n"
+                },
+                {
+                    "date": 1762846168573,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,8 @@\n \n // Admin\n const adminRouter = express.Router();\n adminRouter.get(\"/\", auth, ctrl.listAdmin);\n-adminRouter.put(\"/:id/approve\", auth, c.approve);\n-adminRouter.delete(\"/:id\", auth, c.remove);\n+adminRouter.put(\"/:id/approve\", auth, ct.approve);\n+adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n module.exports = { publicRouter, adminRouter };\n"
+                },
+                {
+                    "date": 1762846210181,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,8 +16,10 @@\n \n // Admin\n const adminRouter = express.Router();\n adminRouter.get(\"/\", auth, ctrl.listAdmin);\n-adminRouter.put(\"/:id/approve\", auth, ct.approve);\n+adminRouter.put(\"/:id/approve\", auth, ctrl.approve);\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n+// module.exports = { publicRouter, adminRouter };\n module.exports = { publicRouter, adminRouter };\n+\n"
+                },
+                {
+                    "date": 1762846215222,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,6 +20,6 @@\n adminRouter.put(\"/:id/approve\", auth, ctrl.approve);\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n // module.exports = { publicRouter, adminRouter };\n-module.exports = { publicRouter, adminRouter };\n+module.exports = { router, adminRouter };\n \n"
+                },
+                {
+                    "date": 1762846451374,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,25 +1,17 @@\n // blog-backend/src/routes/commentRoutes.js\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n-// const c = require(\"../controllers/commentController\");\n-\n-const router = require(\"express\").Router();\n const ctrl = require(\"../controllers/commentController\");\n \n+// Public routes\n+const publicRouter = express.Router();\n+publicRouter.get(\"/\", ctrl.listPublic);\n+publicRouter.post(\"/\", ctrl.createPublic);\n \n-// Public\n-// const publicRouter = express.Router();\n-// publicRouter.post(\"/\", c.createPublic);\n-// publicRouter.get(\"/\", c.listPublic);\n-router.get(\"/\", ctrl.listPublic);\n-router.post(\"/\", ctrl.createPublic);\n-\n-// Admin\n+// Admin routes\n const adminRouter = express.Router();\n adminRouter.get(\"/\", auth, ctrl.listAdmin);\n adminRouter.put(\"/:id/approve\", auth, ctrl.approve);\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n-// module.exports = { publicRouter, adminRouter };\n-module.exports = { router, adminRouter };\n-\n+module.exports = { publicRouter, adminRouter };\n"
+                },
+                {
+                    "date": 1762855246131,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,4 +14,7 @@\n adminRouter.put(\"/:id/approve\", auth, ctrl.approve);\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n module.exports = { publicRouter, adminRouter };\n+\n+\n+\n"
+                },
+                {
+                    "date": 1762855251357,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,4 +17,5 @@\n module.exports = { publicRouter, adminRouter };\n \n \n \n+ew2323\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855303010,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,5 +17,4 @@\n module.exports = { publicRouter, adminRouter };\n \n \n \n-ew2323\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855315026,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,5 +16,5 @@\n \n module.exports = { publicRouter, adminRouter };\n \n \n-\n+23§\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855320390,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,5 +16,5 @@\n \n module.exports = { publicRouter, adminRouter };\n \n \n-23§\n\\ No newline at end of file\n+23§f\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855352139,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,5 +16,5 @@\n \n module.exports = { publicRouter, adminRouter };\n \n \n-23§f\n\\ No newline at end of file\n+23§fhggggghhbhbhgbhh\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855361912,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,6 +15,5 @@\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n module.exports = { publicRouter, adminRouter };\n \n-\n-23§fhggggghhbhbhgbhh\n\\ No newline at end of file\n+jkjkjjj\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855371872,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,5 +15,5 @@\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n module.exports = { publicRouter, adminRouter };\n \n-jkjkjjj\n\\ No newline at end of file\n+jkjkjjjjjjhkhhhhkhkhkhhjhjhjhghghgjkkjkllkk\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855458753,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -14,6 +14,4 @@\n adminRouter.put(\"/:id/approve\", auth, ctrl.approve);\n adminRouter.delete(\"/:id\", auth, ctrl.remove);\n \n module.exports = { publicRouter, adminRouter };\n-\n-jkjkjjjjjjhkhhhhkhkhkhhjhjhjhghghgjkkjkllkk\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1762855814760,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n // blog-backend/src/routes/commentRoutes.js\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n-const ctrl = require(\"../controllers/commentController\");\n+const ctrl = require(\"../controllers/commentController\");       \n \n // Public routes\n const publicRouter = express.Router();\n publicRouter.get(\"/\", ctrl.listPublic);\n"
+                },
+                {
+                    "date": 1762855876842,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n const express = require(\"express\");\n const auth = require(\"../middleware/authMiddleware\");\n const ctrl = require(\"../controllers/commentController\");       \n \n+\n // Public routes\n const publicRouter = express.Router();\n publicRouter.get(\"/\", ctrl.listPublic);\n publicRouter.post(\"/\", ctrl.createPublic);\n"
                 }
             ],
             "date": 1762458454925,

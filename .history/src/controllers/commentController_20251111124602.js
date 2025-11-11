@@ -75,41 +75,20 @@ exports.createPublic = async (req, res) => {
 };
 
 // GET /api/comments?postId=...  (approved only)
-// exports.listPublic = async (req, res) => {
-//   try {
-//     const { postId } = req.query;
-//     if (!postId) return res.status(400).json({ error: "postId required" });
-
-//     const rows = await Comment.find({ post: postId, approved: true })
-//       .sort({ createdAt: 1 })
-//       .lean();
-//     res.json(rows);
-//   } catch (err) {
-//     console.error("listPublic comments error", err);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// };
-
-
 exports.listPublic = async (req, res) => {
   try {
-    const rawPostId = req.query?.postId ?? req.query?.post;
-    if (!rawPostId) return res.status(400).json({ error: "postId required" });
-    if (!mongoose.isValidObjectId(rawPostId)) {
-      return res.status(400).json({ error: "Invalid postId" });
-    }
+    const { postId } = req.query;
+    if (!postId) return res.status(400).json({ error: "postId required" });
 
-    const rows = await Comment.find({ post: rawPostId, approved: true })
+    const rows = await Comment.find({ post: postId, approved: true })
       .sort({ createdAt: 1 })
       .lean();
-
-    return res.json(rows);
+    res.json(rows);
   } catch (err) {
     console.error("listPublic comments error", err);
-    return res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error" });
   }
 };
-
 
 // -------- ADMIN --------
 

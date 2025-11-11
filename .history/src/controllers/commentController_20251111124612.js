@@ -90,27 +90,6 @@ exports.createPublic = async (req, res) => {
 //   }
 // };
 
-
-exports.listPublic = async (req, res) => {
-  try {
-    const rawPostId = req.query?.postId ?? req.query?.post;
-    if (!rawPostId) return res.status(400).json({ error: "postId required" });
-    if (!mongoose.isValidObjectId(rawPostId)) {
-      return res.status(400).json({ error: "Invalid postId" });
-    }
-
-    const rows = await Comment.find({ post: rawPostId, approved: true })
-      .sort({ createdAt: 1 })
-      .lean();
-
-    return res.json(rows);
-  } catch (err) {
-    console.error("listPublic comments error", err);
-    return res.status(500).json({ error: "Server error" });
-  }
-};
-
-
 // -------- ADMIN --------
 
 // GET /api/admin/comments?postId=...&approved=true|false (optional filters)
