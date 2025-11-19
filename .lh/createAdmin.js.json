@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 4,
             "patches": [
                 {
                     "date": 1762274875375,
@@ -16,6 +16,14 @@
                 {
                     "date": 1762275737300,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,21 +1,38 @@\n-const dotenv = require('dotenv');\n-dotenv.config();\n+// createAdmin.js\n+require(\"dotenv\").config();\n+const connectDB = require(\"./src/config/db\");\n+const Admin = require(\"./src/models/Admin\");\n \n-const mongoose = require('mongoose');\n-const connectDB = require('./src/config/db');\n-const Admin = require('./src/models/Admin');\n-\n (async () => {\n-  await connectDB();\n+  try {\n+    await connectDB();\n \n-  const admin = new Admin({\n-    username: 'admin@gmail.com',\n-    passwordHash: 'admin', // will be replaced\n-  });\n+    const username = \"admin\";\n+    const email = \"admin@gmail.com\";\n+    const password = \"yourStrongPassword123\";\n \n-  await admin.setPassword('yourStrongPassword123');\n-  await admin.save();\n+    // find existing admin by username or email\n+    let admin = await Admin.findOne({\n+      $or: [{ username }, { email }],\n+    });\n \n-  console.log('Admin created:', admin.username);\n-  process.exit(0);\n+    if (!admin) {\n+      admin = new Admin({\n+        username,\n+        email,\n+        passwordHash: \"temp\", // placeholder until setPassword runs\n+      });\n+    }\n+\n+    await admin.setPassword(password); // hashes the password\n+    await admin.save();\n+\n+    console.log(\"✅ Admin ready:\");\n+    console.log({ username, email, password });\n+\n+    process.exit(0);\n+  } catch (err) {\n+    console.error(\"❌ Error creating admin:\", err);\n+    process.exit(1);\n+  }\n })();\n"
+                },
+                {
+                    "date": 1763555041856,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,11 +6,11 @@\n (async () => {\n   try {\n     await connectDB();\n \n-    const username = \"admin\";\n-    const email = \"admin@gmail.com\";\n-    const password = \"yourStrongPassword123\";\n+    // const username = \"admin\";\n+    // const email = \"admin@gmail.com\";\n+    // const password = \"yourStrongPassword123\";\n \n     // find existing admin by username or email\n     let admin = await Admin.findOne({\n       $or: [{ username }, { email }],\n"
+                },
+                {
+                    "date": 1763555055943,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,8 +10,12 @@\n     // const username = \"admin\";\n     // const email = \"admin@gmail.com\";\n     // const password = \"yourStrongPassword123\";\n \n+    const username = \"admin\";\n+    const email = \"admin@gmail.com\";\n+    const password = \"Admin@12345\";\n+\n     // find existing admin by username or email\n     let admin = await Admin.findOne({\n       $or: [{ username }, { email }],\n     });\n"
                 }
             ],
             "date": 1762274875375,

@@ -13,7 +13,7 @@ const Admin = require("./src/models/Admin");
 
     const username = "admin";
     const email = "admin@gmail.com";
-    const password = "Admin@12345";
+    const password = "yourStrongPassword123";
 
     // find existing admin by username or email
     let admin = await Admin.findOne({
