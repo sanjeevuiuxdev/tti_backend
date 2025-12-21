@@ -109,19 +109,11 @@ exports.createBlog = async (req, res) => {
     }
 
     // Normalize tags (array only)
-    let normalizedTags = [];
-
-    if (typeof tags === "string") {
-      try {
-        const parsed = JSON.parse(tags);
-        if (Array.isArray(parsed)) {
-          normalizedTags = parsed.map(t => t.trim()).filter(Boolean);
-        }
-      } catch {
-        normalizedTags = tags.split(",").map(t => t.trim()).filter(Boolean);
-      }
-    }
-    
+    const normalizedTags = Array.isArray(tags)
+      ? tags.map(t => t.trim()).filter(Boolean)
+      : typeof tags === "string"
+        ? tags.split(",").map(t => t.trim()).filter(Boolean)
+        : [];
 
     // Upload image
     const upload = await uploadBufferToCloudinary(req.file.buffer);
@@ -159,62 +151,26 @@ exports.updateBlog = async (req, res) => {
     const { id } = req.params;
 
     const set = {};
-    const fields = [
-      "title",
-      "postedBy",
-      "contentHtml",
-      "metaTitle",
-      "metaDescription",
-      "schemaMarkup",
-    ];
-
+    // const fields = ["title", "postedBy", "contentHtml", "metaTitle", "metaDescription"];
+    const fields = ["title", "postedBy", "contentHtml", "metaTitle", "metaDescription", "schemaMarkup"];
     fields.forEach((f) => {
       if (typeof req.body[f] !== "undefined") set[f] = req.body[f];
     });
+    if (typeof req.body.categoryId !== "undefined") set.category = req.body.categoryId;
+    if (typeof req.body.published !== "undefined") set.published = req.body.published === "true";
+    if (typeof req.body.sections !== "undefined") set.sections = cleanSections(req.body.sections);
 
-    if (typeof req.body.categoryId !== "undefined") {
-      set.category = req.body.categoryId;
-    }
-
-    if (typeof req.body.published !== "undefined") {
-      set.published = req.body.published === "true";
-    }
-
-    if (typeof req.body.sections !== "undefined") {
-      set.sections = cleanSections(req.body.sections);
-    }
-
-    // ✅ TAGS (THIS WAS MISSING)
-    if (typeof req.body.tags === "string") {
-      try {
-        const parsed = JSON.parse(req.body.tags);
-        if (Array.isArray(parsed)) {
-          set.tags = parsed.map(t => t.trim()).filter(Boolean);
-        }
-      } catch {
-        set.tags = req.body.tags
-          .split(",")
-          .map(t => t.trim())
-          .filter(Boolean);
-      }
-    }
-
-    // Replace image if new file provided
+    // If new image provided, replace on Cloudinary
     if (req.file && req.file.buffer) {
       const current = await Blog.findById(id).select("mainImage.public_id");
       if (!current) return res.status(404).json({ error: "Not found" });
 
       if (current.mainImage?.public_id) {
-        try {
-          await cloudinary.uploader.destroy(current.mainImage.public_id);
-        } catch {}
+        try { await cloudinary.uploader.destroy(current.mainImage.public_id); } catch {}
       }
 
       const up = await uploadBufferToCloudinary(req.file.buffer);
-      set.mainImage = {
-        url: up.secure_url,
-        public_id: up.public_id,
-      };
+      set.mainImage = { url: up.secure_url, public_id: up.public_id };
     }
 
     const updated = await Blog.findByIdAndUpdate(
@@ -224,16 +180,13 @@ exports.updateBlog = async (req, res) => {
     ).populate("category", "name slug");
 
     if (!updated) return res.status(404).json({ error: "Not found" });
-
     res.json(updated);
   } catch (err) {
     console.error("updateBlog error", err);
-    res.status(err.http_code || 500).json({
-      error: err?.message || "Server error",
-    });
+    const msg = err?.message || "Server error";
+    res.status(err.http_code || 500).json({ error: msg });
   }
 };
-
 
 exports.deleteBlog = async (req, res) => {
   try {
@@ -249,37 +202,5 @@ exports.deleteBlog = async (req, res) => {
   } catch (err) {
     console.error("deleteBlog error", err);
     res.status(500).json({ error: "Server error" });
-  }
-};
-
-
-// controllers/tag.controller.js
-exports.getPopularTags = async (req, res) => {
-  try {
-    const limit = Number(req.query.limit) || 12;
-
-    const tags = await Blog.aggregate([
-      { $match: { published: true } },
-      { $unwind: "$tags" },
-      {
-        $group: {
-          _id: "$tags",
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { count: -1 } },
-      { $limit: limit },
-      {
-        $project: {
-          _id: 0,
-          tag: "$_id",
-          count: 1,
-        },
-      },
-    ]);
-
-    res.json(tags);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to load tags" });
   }
 };

@@ -9,7 +9,7 @@ const {
   updateBlog,
   deleteBlog,
   getSectionOptions,
-  getPopularTags, 
+  getPopularTags, // ✅ added
 } = require("../controllers/blogController");
 
 const auth = require("../middleware/authMiddleware");
@@ -17,9 +17,9 @@ const upload = require("../middleware/upload");
 
 // PUBLIC
 router.get("/", getBlogs);
-router.get("/sections", getSectionOptions);
-router.get("/popular", getPopularTags);
+router.get("/sections", getSectionOptions); // ✅ for admin dropdowns
 router.get("/:slug", getBlogBySlug);
+router.get("/popular", getPopularTags);
 
 // ADMIN (multipart)
 router.post("/", auth, upload.single("mainImage"), createBlog);

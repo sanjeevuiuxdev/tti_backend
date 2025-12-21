@@ -30,7 +30,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/uploads', uploadRoutes);
 
-app.use("/api/contact", require("./src/routes/contactRoutes"));
+app.use("/api/contact", require(".//routes/contactRoutes"));
 
 app.use("/api/comments", commentPublic);
 app.use("/api/admin/comments", commentAdmin);

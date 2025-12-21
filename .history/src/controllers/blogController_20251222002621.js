@@ -251,35 +251,3 @@ exports.deleteBlog = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-
-// controllers/tag.controller.js
-exports.getPopularTags = async (req, res) => {
-  try {
-    const limit = Number(req.query.limit) || 12;
-
-    const tags = await Blog.aggregate([
-      { $match: { published: true } },
-      { $unwind: "$tags" },
-      {
-        $group: {
-          _id: "$tags",
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { count: -1 } },
-      { $limit: limit },
-      {
-        $project: {
-          _id: 0,
-          tag: "$_id",
-          count: 1,
-        },
-      },
-    ]);
-
-    res.json(tags);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to load tags" });
-  }
-};

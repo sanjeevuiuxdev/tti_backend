@@ -18,8 +18,8 @@ const upload = require("../middleware/upload");
 // PUBLIC
 router.get("/", getBlogs);
 router.get("/sections", getSectionOptions);
-router.get("/popular", getPopularTags);
 router.get("/:slug", getBlogBySlug);
+router.get("/popular", getPopularTags);
 
 // ADMIN (multipart)
 router.post("/", auth, upload.single("mainImage"), createBlog);

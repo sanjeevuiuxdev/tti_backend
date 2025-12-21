@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 6,
+            "activePatchIndex": 9,
             "patches": [
                 {
                     "date": 1762366625514,
@@ -32,6 +32,18 @@
                 {
                     "date": 1762632724622,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -135,9 +135,10 @@\n   try {\n     const { id } = req.params;\n \n     const set = {};\n-    const fields = [\"title\", \"postedBy\", \"contentHtml\", \"metaTitle\", \"metaDescription\"];\n+    // const fields = [\"title\", \"postedBy\", \"contentHtml\", \"metaTitle\", \"metaDescription\"];\n+    const fields = [\"title\", \"postedBy\", \"contentHtml\", \"metaTitle\", \"metaDescription\", \"schemaMarkup\"];\n     fields.forEach((f) => {\n       if (typeof req.body[f] !== \"undefined\") set[f] = req.body[f];\n     });\n     if (typeof req.body.categoryId !== \"undefined\") set.category = req.body.categoryId;\n"
+                },
+                {
+                    "date": 1765047733039,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -96,8 +96,9 @@\n       metaDescription,\n       published,\n       sections,\n       schemaMarkup, \n+      \n     } = req.body;\n \n     if (!title || !postedBy || !categoryId || !contentHtml) {\n       return res.status(400).json({ error: \"Missing required fields\" });\n"
+                },
+                {
+                    "date": 1765047908020,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -96,8 +96,9 @@\n       metaDescription,\n       published,\n       sections,\n       schemaMarkup, \n+      tags\n       \n     } = req.body;\n \n     if (!title || !postedBy || !categoryId || !contentHtml) {\n"
+                },
+                {
+                    "date": 1765047914865,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -97,9 +97,8 @@\n       published,\n       sections,\n       schemaMarkup, \n       tags,\n-      \n     } = req.body;\n \n     if (!title || !postedBy || !categoryId || !contentHtml) {\n       return res.status(400).json({ error: \"Missing required fields\" });\n"
                 }
             ],
             "date": 1762366625513,

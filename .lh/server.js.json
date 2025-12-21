@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1762458490759,
@@ -12,6 +12,14 @@
                 {
                     "date": 1762458510686,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,9 @@\n const express = require('express');\n const dotenv = require('dotenv');\n const cors = require('cors');\n const connectDB = require('./src/config/db');\n+const { publicRouter: commentPublic, adminRouter: commentAdmin } = require(\"./src/routes/commentRoutes\");\n \n \n \n dotenv.config();\n@@ -28,8 +29,10 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n+\n+\n // health check\n app.get('/', (req, res) => {\n   res.json({ status: 'API running' });\n });\n"
+                },
+                {
+                    "date": 1766346533286,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,12 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n+app.use(\"/api/contact\", require(\"./routes/contactRoutes\"));\n \n+app.use(\"/api/comments\", commentPublic);\n+app.use(\"/api/admin/comments\", commentAdmin);\n \n // health check\n app.get('/', (req, res) => {\n   res.json({ status: 'API running' });\n"
+                },
+                {
+                    "date": 1766347236216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,9 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n-app.use(\"/api/contact\", require(\"./routes/contactRoutes\"));\n+app.use(\"/api/contact\", require(\".//routes/contactRoutes\"));\n \n app.use(\"/api/comments\", commentPublic);\n app.use(\"/api/admin/comments\", commentAdmin);\n \n"
                 }
             ],
             "date": 1762458490759,

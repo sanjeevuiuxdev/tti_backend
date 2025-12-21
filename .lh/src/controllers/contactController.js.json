@@ -1,0 +1,50 @@
+{
+    "sourceFile": "src/controllers/contactController.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 8,
+            "patches": [
+                {
+                    "date": 1766346491992,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1766347560919,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n const nodemailer = require(\"nodemailer\");\n \n exports.sendContactMail = async (req, res) => {\n   try {\n-    const { name, phone, message } = req.body;\n+    const { name, phone, ,message } = req.body;\n \n     if (!name || !phone || !message) {\n       return res.status(400).json({ error: \"All fields are required\" });\n     }\n"
+                },
+                {
+                    "date": 1766347567213,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,9 +1,9 @@\n const nodemailer = require(\"nodemailer\");\n \n exports.sendContactMail = async (req, res) => {\n   try {\n-    const { name, phone, ,message } = req.body;\n+    const { name, phone, email,message } = req.body;\n \n     if (!name || !phone || !message) {\n       return res.status(400).json({ error: \"All fields are required\" });\n     }\n"
+                },
+                {
+                    "date": 1766347572903,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n exports.sendContactMail = async (req, res) => {\n   try {\n     const { name, phone, email,message } = req.body;\n \n-    if (!name || !phone || !message) {\n+    if (!name || !phone ||  !message) {\n       return res.status(400).json({ error: \"All fields are required\" });\n     }\n \n     const transporter = nodemailer.createTransport({\n"
+                },
+                {
+                    "date": 1766347579456,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n exports.sendContactMail = async (req, res) => {\n   try {\n     const { name, phone, email,message } = req.body;\n \n-    if (!name || !phone ||  !message) {\n+    if (!name || !phone || ! || !message) {\n       return res.status(400).json({ error: \"All fields are required\" });\n     }\n \n     const transporter = nodemailer.createTransport({\n"
+                },
+                {
+                    "date": 1766347602539,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,9 +3,9 @@\n exports.sendContactMail = async (req, res) => {\n   try {\n     const { name, phone, email,message } = req.body;\n \n-    if (!name || !phone || ! || !message) {\n+    if (!name || !phone || !email || !message) {\n       return res.status(400).json({ error: \"All fields are required\" });\n     }\n \n     const transporter = nodemailer.createTransport({\n@@ -22,9 +22,8 @@\n       subject: \"New Contact Form Message\",\n       html: `\n         <h3>New Contact Message</h3>\n         <p><strong>Name:</strong> ${name}</p>\n-        <p><strong>Phone:</strong> ${phone}</p>\n         <p><strong>Message:</strong></p>\n         <p>${message}</p>\n       `,\n     });\n"
+                },
+                {
+                    "date": 1766347609192,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -22,8 +22,10 @@\n       subject: \"New Contact Form Message\",\n       html: `\n         <h3>New Contact Message</h3>\n         <p><strong>Name:</strong> ${name}</p>\n+        <p><strong>Phone:</strong> ${phone}</p>\n+        \n         <p><strong>Message:</strong></p>\n         <p>${message}</p>\n       `,\n     });\n"
+                },
+                {
+                    "date": 1766347618665,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       html: `\n         <h3>New Contact Message</h3>\n         <p><strong>Name:</strong> ${name}</p>\n         <p><strong>Phone:</strong> ${phone}</p>\n-        <p><strong>Phone:</strong> ${phone}</p>\n+        <p><strong>Email:</strong> ${phone}</p>\n         <p><strong>Message:</strong></p>\n         <p>${message}</p>\n       `,\n     });\n"
+                },
+                {
+                    "date": 1766347625224,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -23,9 +23,9 @@\n       html: `\n         <h3>New Contact Message</h3>\n         <p><strong>Name:</strong> ${name}</p>\n         <p><strong>Phone:</strong> ${phone}</p>\n-        <p><strong>Email:</strong> ${phone}</p>\n+        <p><strong>Email:</strong> ${email}</p>\n         <p><strong>Message:</strong></p>\n         <p>${message}</p>\n       `,\n     });\n"
+                }
+            ],
+            "date": 1766346491992,
+            "name": "Commit-0",
+            "content": "const nodemailer = require(\"nodemailer\");\n\nexports.sendContactMail = async (req, res) => {\n  try {\n    const { name, phone, message } = req.body;\n\n    if (!name || !phone || !message) {\n      return res.status(400).json({ error: \"All fields are required\" });\n    }\n\n    const transporter = nodemailer.createTransport({\n      service: \"gmail\",\n      auth: {\n        user: process.env.MAIL_USER, // ttiworldconnect@gmail.com\n        pass: process.env.MAIL_PASS, // app password\n      },\n    });\n\n    await transporter.sendMail({\n      from: `\"Website Contact\" <${process.env.MAIL_USER}>`,\n      to: \"ttiworldconnect@gmail.com\",\n      subject: \"New Contact Form Message\",\n      html: `\n        <h3>New Contact Message</h3>\n        <p><strong>Name:</strong> ${name}</p>\n        <p><strong>Phone:</strong> ${phone}</p>\n        <p><strong>Message:</strong></p>\n        <p>${message}</p>\n      `,\n    });\n\n    res.json({ success: true });\n  } catch (err) {\n    console.error(\"Contact mail error\", err);\n    res.status(500).json({ error: \"Failed to send message\" });\n  }\n};\n"
+        }
+    ]
+}

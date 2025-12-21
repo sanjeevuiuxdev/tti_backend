@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1762361669930,
@@ -12,6 +12,22 @@
                 {
                     "date": 1762367075840,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,4 +1,5 @@\n+// routes/blogRoutes.js\n const express = require(\"express\");\n const router = express.Router();\n \n const {\n@@ -6,30 +7,20 @@\n   getBlogs,\n   getBlogBySlug,\n   updateBlog,\n   deleteBlog,\n-  getSectionOptions, // NEW: return allowed homepage section tags\n+  getSectionOptions, // ✅ added\n } = require(\"../controllers/blogController\");\n \n const auth = require(\"../middleware/authMiddleware\");\n const upload = require(\"../middleware/upload\");\n \n-/**\n- * PUBLIC\n- * Supports query params:\n- *   - ?section=<top_new|most_popular|editors_pick|latest_posts|highlights>\n- *   - ?category=<category-slug>\n- *   - ?limit=<number>   (max 50)\n- */\n+// PUBLIC\n router.get(\"/\", getBlogs);\n-router.get(\"/sections\", getSectionOptions); // NEW helper for admin UI dropdowns\n+router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n router.get(\"/:slug\", getBlogBySlug);\n \n-/**\n- * ADMIN (multipart form-data)\n- * mainImage field is handled by Multer.\n- * For arrays like `sections`, send as JSON string in form-data and parse in controller.\n- */\n+// ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n router.delete(\"/:id\", auth, deleteBlog);\n \n"
+                },
+                {
+                    "date": 1766344052479,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,8 +17,9 @@\n // PUBLIC\n router.get(\"/\", getBlogs);\n router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n router.get(\"/:slug\", getBlogBySlug);\n+router.get(\"/popular\", getPopularTags);\n \n // ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n"
+                },
+                {
+                    "date": 1766344065618,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -17,9 +17,9 @@\n // PUBLIC\n router.get(\"/\", getBlogs);\n router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n router.get(\"/:slug\", getBlogBySlug);\n-router.get(\"/popular\", getPopularTags);\n+router.get(\"/popular\", get);\n \n // ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n"
+                },
+                {
+                    "date": 1766344071532,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,10 @@\n   getBlogs,\n   getBlogBySlug,\n   updateBlog,\n   deleteBlog,\n-  getSectionOptions, // ✅ added\n+  getSectionOptions,\n+  getPopularTags, \n } = require(\"../controllers/blogController\");\n \n const auth = require(\"../middleware/authMiddleware\");\n const upload = require(\"../middleware/upload\");\n@@ -17,9 +18,9 @@\n // PUBLIC\n router.get(\"/\", getBlogs);\n router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n router.get(\"/:slug\", getBlogBySlug);\n-router.get(\"/popular\", get);\n+router.get(\"/popular\", getPopularTags);\n \n // ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n"
+                },
+                {
+                    "date": 1766345162838,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -16,11 +16,11 @@\n const upload = require(\"../middleware/upload\");\n \n // PUBLIC\n router.get(\"/\", getBlogs);\n-router.get(\"/sections\", getSectionOptions); // ✅ for admin dropdowns\n+router.get(\"/sections\", getSectionOptions);\n+router.get(\"/popular\", getPopularTags);\n router.get(\"/:slug\", getBlogBySlug);\n-router.get(\"/popular\", getPopularTags);\n \n // ADMIN (multipart)\n router.post(\"/\", auth, upload.single(\"mainImage\"), createBlog);\n router.put(\"/:id\", auth, upload.single(\"mainImage\"), updateBlog);\n"
                 }
             ],
             "date": 1762361669930,
