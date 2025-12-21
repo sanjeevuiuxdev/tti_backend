@@ -1,12 +1,11 @@
-// src/controllers/authController.js
 const Admin = require('../models/Admin');
 const jwt = require('jsonwebtoken');
 
-// accept either username or email in the same field
-// frontend still sends { username: '...' , password: '...' }
+// POST /api/auth/login
+// body: { username, password }
 const login = async (req, res) => {
   try {
-    const { username, password } = req.body; // "username" may be email too
+    const { username, email, password } = req.body;
     if (!username || !password) {
       return res.status(400).json({ message: 'Missing credentials' });
     }
@@ -32,4 +31,19 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { login, getMe };
+// GET /api/auth/me
+// header: Authorization: Bearer <token>
+const getMe = async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.adminId).select('-passwordHash');
+    if (!admin) return res.status(404).json({ message: 'Not found' });
+    res.json(admin);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = {
+  login,
+  getMe,
+};

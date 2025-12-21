@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 8,
             "patches": [
                 {
                     "date": 1762275582562,
@@ -12,6 +12,34 @@
                 {
                     "date": 1762275630686,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,10 +1,9 @@\n-// src/controllers/authController.js\n const Admin = require('../models/Admin');\n const jwt = require('jsonwebtoken');\n \n-// accept either username or email in the same field\n-// frontend still sends { username: '...' , password: '...' }\n+// POST /api/auth/login\n+// body: { username, password }\n const login = async (req, res) => {\n   try {\n     const { username, password } = req.body; // \"username\" may be email too\n     if (!username || !password) {\n@@ -31,5 +30,20 @@\n     res.status(500).json({ message: 'Server error' });\n   }\n };\n \n-module.exports = { login, getMe };\n+// GET /api/auth/me\n+// header: Authorization: Bearer <token>\n+const getMe = async (req, res) => {\n+  try {\n+    const admin = await Admin.findById(req.adminId).select('-passwordHash');\n+    if (!admin) return res.status(404).json({ message: 'Not found' });\n+    res.json(admin);\n+  } catch (err) {\n+    res.status(500).json({ message: 'Server error' });\n+  }\n+};\n+\n+module.exports = {\n+  login,\n+  getMe,\n+};\n"
+                },
+                {
+                    "date": 1766359753380,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n // POST /api/auth/login\n // body: { username, password }\n const login = async (req, res) => {\n   try {\n-    const { username, password } = req.body; // \"username\" may be email too\n+    const { username, email, password } = req.body;\n     if (!username || !password) {\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n"
+                },
+                {
+                    "date": 1766359789468,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -10,9 +10,12 @@\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n     const admin = await Admin.findOne({\n-      $or: [{ username }, { email: username }]\n+      $or: [\n+    { username },\n+    { email }\n+  ],\n     });\n \n     if (!admin) return res.status(400).json({ message: 'Invalid credentials' });\n \n"
+                },
+                {
+                    "date": 1766359809803,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,18 +4,15 @@\n // POST /api/auth/login\n // body: { username, password }\n const login = async (req, res) => {\n   try {\n-    const { username, email, password } = req.body;\n+    const { username, password } = req.body; // \"username\" may be email too\n     if (!username || !password) {\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n     const admin = await Admin.findOne({\n-      $or: [\n-    { username },\n-    { email }\n-  ],\n+      $or: [{ username }, { email: username }]\n     });\n \n     if (!admin) return res.status(400).json({ message: 'Invalid credentials' });\n \n"
+                },
+                {
+                    "date": 1766360012830,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,18 @@\n // POST /api/auth/login\n // body: { username, password }\n const login = async (req, res) => {\n   try {\n-    const { username, password } = req.body; // \"username\" may be email too\n+    const { username, email, password } = req.body;\n+\n+const identifier = username || email;\n+if (!identifier || !password) {\n+  return res.status(400).json({ message: 'Missing credentials' });\n+}\n+\n+const admin = await Admin.findOne({\n+  $or: [{ username: identifier }, { email: identifier }],\n+});\n     if (!username || !password) {\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n"
+                },
+                {
+                    "date": 1766360018438,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,18 +4,9 @@\n // POST /api/auth/login\n // body: { username, password }\n const login = async (req, res) => {\n   try {\n-    const { username, email, password } = req.body;\n-\n-const identifier = username || email;\n-if (!identifier || !password) {\n-  return res.status(400).json({ message: 'Missing credentials' });\n-}\n-\n-const admin = await Admin.findOne({\n-  $or: [{ username: identifier }, { email: identifier }],\n-});\n+    const { username, password } = req.body; // \"username\" may be email too\n     if (!username || !password) {\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n"
+                },
+                {
+                    "date": 1766360040168,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,10 +4,12 @@\n // POST /api/auth/login\n // body: { username, password }\n const login = async (req, res) => {\n   try {\n-    const { username, password } = req.body; // \"username\" may be email too\n-    if (!username || !password) {\n+    const { username, email, password } = req.body;\n+\n+    const identifier = username || email;\n+    if (!identifier || !password) {\n       return res.status(400).json({ message: 'Missing credentials' });\n     }\n \n     const admin = await Admin.findOne({\n"
+                },
+                {
+                    "date": 1766360289286,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,48 +1,62 @@\n-const Admin = require('../models/Admin');\n-const jwt = require('jsonwebtoken');\n+const Admin = require(\"../models/Admin\");\n+const jwt = require(\"jsonwebtoken\");\n \n // POST /api/auth/login\n-// body: { username, password }\n+// body: { username OR email, password }\n const login = async (req, res) => {\n   try {\n     const { username, email, password } = req.body;\n \n     const identifier = username || email;\n     if (!identifier || !password) {\n-      return res.status(400).json({ message: 'Missing credentials' });\n+      return res.status(400).json({ message: \"Missing credentials\" });\n     }\n \n     const admin = await Admin.findOne({\n-      $or: [{ username }, { email: username }]\n+      $or: [\n+        { username: identifier },\n+        { email: identifier }\n+      ]\n     });\n \n-    if (!admin) return res.status(400).json({ message: 'Invalid credentials' });\n+    if (!admin) {\n+      return res.status(400).json({ message: \"Invalid credentials\" });\n+    }\n \n     const ok = await admin.validatePassword(password);\n-    if (!ok) return res.status(400).json({ message: 'Invalid credentials' });\n+    if (!ok) {\n+      return res.status(400).json({ message: \"Invalid credentials\" });\n+    }\n \n-    const token = jwt.sign({ id: admin._id, username: admin.username }, process.env.JWT_SECRET, { expiresIn: '7d' });\n+    const token = jwt.sign(\n+      { id: admin._id, username: admin.username },\n+      process.env.JWT_SECRET,\n+      { expiresIn: \"7d\" }\n+    );\n \n     res.json({\n       token,\n-      admin: { id: admin._id, username: admin.username, email: admin.email || null }\n+      admin: {\n+        id: admin._id,\n+        username: admin.username,\n+        email: admin.email || null,\n+      },\n     });\n   } catch (e) {\n-    console.error('login error', e);\n-    res.status(500).json({ message: 'Server error' });\n+    console.error(\"login error\", e);\n+    res.status(500).json({ message: \"Server error\" });\n   }\n };\n \n // GET /api/auth/me\n-// header: Authorization: Bearer <token>\n const getMe = async (req, res) => {\n   try {\n-    const admin = await Admin.findById(req.adminId).select('-passwordHash');\n-    if (!admin) return res.status(404).json({ message: 'Not found' });\n+    const admin = await Admin.findById(req.adminId).select(\"-passwordHash\");\n+    if (!admin) return res.status(404).json({ message: \"Not found\" });\n     res.json(admin);\n   } catch (err) {\n-    res.status(500).json({ message: 'Server error' });\n+    res.status(500).json({ message: \"Server error\" });\n   }\n };\n \n module.exports = {\n"
                 }
             ],
             "date": 1762275582562,
