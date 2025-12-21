@@ -15,9 +15,9 @@ const Admin = require("./src/models/Admin");
     // const email = "admin@gmail.com";
     // const password = "Admin@12345";
 
-    const username = "ashu";
+    const username = "admin";
     const email = "admin@gmail.com";
-    const password = "TTI_Ashu@12345";
+    const password = "Admin@12345";
 
     // find existing admin by username or email
     let admin = await Admin.findOne({
