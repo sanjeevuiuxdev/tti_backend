@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/routes/bootstrapAdmin.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1766359003150,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1766359003150,
+            "name": "Commit-0",
+            "content": "// routes/bootstrapAdmin.js\nconst express = require(\"express\");\nconst router = express.Router();\nconst Admin = require(\"../models/Admin\");\n\nrouter.post(\"/bootstrap-admin\", async (req, res) => {\n  // simple protection\n  if (req.headers[\"x-bootstrap-key\"] !== process.env.BOOTSTRAP_KEY) {\n    return res.status(403).json({ error: \"Forbidden\" });\n  }\n\n  const username = \"ashu\";\n  const email = \"admin@gmail.com\";\n  const password = \"TTI_Ashu@12345\";\n\n  let admin = await Admin.findOne({ $or: [{ username }, { email }] });\n\n  if (!admin) {\n    admin = new Admin({\n      username,\n      email,\n      passwordHash: \"temp\",\n    });\n  }\n\n  await admin.setPassword(password);\n  await admin.save();\n\n  res.json({ success: true });\n});\n\nmodule.exports = router;\n"
+        }
+    ]
+}

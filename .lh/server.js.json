@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 3,
+            "activePatchIndex": 5,
             "patches": [
                 {
                     "date": 1762458490759,
@@ -20,6 +20,14 @@
                 {
                     "date": 1766347236216,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,9 +29,9 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n-app.use(\"/api/contact\", require(\"./routes/contactRoutes\"));\n+app.use(\"/api/contact\", require(\".//routes/contactRoutes\"));\n \n app.use(\"/api/comments\", commentPublic);\n app.use(\"/api/admin/comments\", commentAdmin);\n \n"
+                },
+                {
+                    "date": 1766359020692,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,13 +29,15 @@\n app.use('/api/categories', categoryRoutes);\n app.use('/api/blogs', blogRoutes);\n app.use('/api/uploads', uploadRoutes);\n \n-app.use(\"/api/contact\", require(\".//routes/contactRoutes\"));\n+app.use(\"/api/contact\", require(\"./src/routes/contactRoutes\"));\n \n app.use(\"/api/comments\", commentPublic);\n app.use(\"/api/admin/comments\", commentAdmin);\n+app.use(\"/api/internal\", require(\"./routes/bootstrapAdmin\"));\n \n+\n // health check\n app.get('/', (req, res) => {\n   res.json({ status: 'API running' });\n });\n"
+                },
+                {
+                    "date": 1766359029257,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -33,9 +33,9 @@\n app.use(\"/api/contact\", require(\"./src/routes/contactRoutes\"));\n \n app.use(\"/api/comments\", commentPublic);\n app.use(\"/api/admin/comments\", commentAdmin);\n-app.use(\"/api/internal\", require(\"./routes/bootstrapAdmin\"));\n+app.use(\"/api/internal\", require(\".//routes/bootstrapAdmin\"));\n \n \n // health check\n app.get('/', (req, res) => {\n"
                 }
             ],
             "date": 1762458490759,

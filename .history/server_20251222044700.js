@@ -34,7 +34,7 @@ app.use("/api/contact", require("./src/routes/contactRoutes"));
 
 app.use("/api/comments", commentPublic);
 app.use("/api/admin/comments", commentAdmin);
-app.use("/api/internal", require("./src/routes/bootstrapAdmin"));
+app.use("/api/internal", require("./routes/bootstrapAdmin"));
 
 
 // health check
