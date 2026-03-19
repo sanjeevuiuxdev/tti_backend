@@ -1,0 +1,22 @@
+{
+    "sourceFile": "src/models/Blog.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1762361353259,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1762366594385,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,14 +1,13 @@\n-// models/Blog.js\n const mongoose = require(\"mongoose\");\n const slugify = require(\"slugify\");\n \n const SECTION_VALUES = [\n-  \"top_new\",\n-  \"most_popular\",\n-  \"editors_pick\",\n-  \"latest_posts\",\n-  \"highlights\",\n+  \"top_new\",        // 1\n+  \"most_popular\",   // 2\n+  \"editors_pick\",   // 3\n+  \"latest_posts\",   // 4\n+  \"highlights\",     // 5\n ];\n \n const BlogSchema = new mongoose.Schema(\n   {\n@@ -35,9 +34,9 @@\n     metaDescription: { type: String },\n \n     published: { type: Boolean, default: true },\n \n-    // ✅ homepage sections (multi-select)\n+    // ✅ New field for homepage sections\n     sections: {\n       type: [String],\n       enum: SECTION_VALUES,\n       default: [],\n@@ -45,17 +44,17 @@\n   },\n   { timestamps: true }\n );\n \n-// auto slug\n+// auto-generate slug from title if not provided\n BlogSchema.pre(\"validate\", function (next) {\n   if (!this.slug && this.title) {\n     this.slug = slugify(this.title, { lower: true, strict: true });\n   }\n   next();\n });\n \n-// helpful index for section lists\n+// index for fast sorting and section queries\n BlogSchema.index({ sections: 1, createdAt: -1 });\n \n module.exports = mongoose.model(\"Blog\", BlogSchema);\n module.exports.SECTION_VALUES = SECTION_VALUES;\n"
+                }
+            ],
+            "date": 1762361353259,
+            "name": "Commit-0",
+            "content": "const mongoose = require(\"mongoose\");\nconst slugify = require(\"slugify\");\n\nconst SECTION_VALUES = [\n  \"top_new\",        // 1\n  \"most_popular\",   // 2\n  \"editors_pick\",   // 3\n  \"latest_posts\",   // 4\n  \"highlights\",     // 5\n];\n\nconst BlogSchema = new mongoose.Schema(\n  {\n    title: { type: String, required: true },\n\n    slug: { type: String, required: true, unique: true },\n\n    postedBy: { type: String, required: true },\n\n    mainImage: {\n      url: { type: String, required: true },\n      public_id: { type: String, required: true },\n    },\n\n    category: {\n      type: mongoose.Schema.Types.ObjectId,\n      ref: \"Category\",\n      required: true,\n    },\n\n    contentHtml: { type: String, required: true },\n\n    metaTitle: { type: String },\n    metaDescription: { type: String },\n\n    published: { type: Boolean, default: true },\n\n    // ✅ New field for homepage sections\n    sections: {\n      type: [String],\n      enum: SECTION_VALUES,\n      default: [],\n    },\n  },\n  { timestamps: true }\n);\n\n// auto-generate slug from title if not provided\nBlogSchema.pre(\"validate\", function (next) {\n  if (!this.slug && this.title) {\n    this.slug = slugify(this.title, { lower: true, strict: true });\n  }\n  next();\n});\n\n// index for fast sorting and section queries\nBlogSchema.index({ sections: 1, createdAt: -1 });\n\nmodule.exports = mongoose.model(\"Blog\", BlogSchema);\nmodule.exports.SECTION_VALUES = SECTION_VALUES;\n"
+        }
+    ]
+}
